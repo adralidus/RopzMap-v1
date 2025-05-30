@@ -10,15 +10,6 @@ import NewRoadmapDialog from "./NewRoadmapDialog"
 const Dashboard: React.FC = () => {
   const { roadmaps, setCurrentRoadmap, deleteRoadmap } = useRoadmap()
   const [isNewRoadmapDialogOpen, setIsNewRoadmapDialogOpen] = useState(false)
-  const [deleteConfirmation, setDeleteConfirmation] = useState<{
-    isOpen: boolean
-    roadmapId: string
-    roadmapTitle: string
-  }>({
-    isOpen: false,
-    roadmapId: "",
-    roadmapTitle: "",
-  })
 
   const handleOpenRoadmap = (id: string) => {
     const roadmap = roadmaps.find((r) => r.id === id)
@@ -33,24 +24,6 @@ const Dashboard: React.FC = () => {
     if (roadmap) {
       exportRoadmapAsJson(roadmap)
     }
-  }
-
-  const handleDeleteClick = (e: React.MouseEvent, roadmapId: string, roadmapTitle: string) => {
-    e.stopPropagation()
-    setDeleteConfirmation({
-      isOpen: true,
-      roadmapId,
-      roadmapTitle,
-    })
-  }
-
-  const handleConfirmDelete = () => {
-    deleteRoadmap(deleteConfirmation.roadmapId)
-    setDeleteConfirmation({ isOpen: false, roadmapId: "", roadmapTitle: "" })
-  }
-
-  const handleCancelDelete = () => {
-    setDeleteConfirmation({ isOpen: false, roadmapId: "", roadmapTitle: "" })
   }
 
   return (
@@ -128,7 +101,10 @@ const Dashboard: React.FC = () => {
 
               <div className="bg-slate-50 dark:bg-slate-900 px-5 py-2 flex justify-between transition-colors">
                 <button
-                  onClick={(e) => handleDeleteClick(e, roadmap.id, roadmap.title)}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    deleteRoadmap(roadmap.id)
+                  }}
                   className="text-xs font-medium text-rose-600 hover:text-rose-700 dark:text-rose-500 dark:hover:text-rose-400 transition-colors"
                 >
                   Delete
@@ -156,32 +132,6 @@ const Dashboard: React.FC = () => {
       )}
 
       <NewRoadmapDialog isOpen={isNewRoadmapDialogOpen} onClose={() => setIsNewRoadmapDialogOpen(false)} />
-      {/* Delete Confirmation Dialog */}
-      {deleteConfirmation.isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white dark:bg-slate-800 rounded-lg shadow-xl p-6 max-w-md w-full mx-4">
-            <h4 className="text-lg font-medium text-slate-900 dark:text-white mb-4">Delete Roadmap?</h4>
-            <p className="text-slate-600 dark:text-slate-400 mb-6">
-              Are you sure you want to delete "<span className="font-semibold">{deleteConfirmation.roadmapTitle}</span>
-              "? This action cannot be undone and will permanently remove all roadmap items and data.
-            </p>
-            <div className="flex justify-end space-x-3">
-              <button
-                onClick={handleCancelDelete}
-                className="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleConfirmDelete}
-                className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-rose-600 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 transition-colors"
-              >
-                Delete Roadmap
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }

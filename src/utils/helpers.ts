@@ -110,9 +110,9 @@ export const calculateItemPosition = (
   const startPosition = ((itemStartTime - timelineStartTime) / timelineDuration) * 100
   const duration = ((itemEndTime - itemStartTime) / timelineDuration) * 100
 
-  // Each row is 60px high with 16px gap
-  const rowHeight = 60
-  const rowGap = 16
+  // Each row is 32px high with 8px gap
+  const rowHeight = 32
+  const rowGap = 8
   const topOffset = item.row * (rowHeight + rowGap)
 
   return {

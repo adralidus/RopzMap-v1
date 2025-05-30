@@ -3,7 +3,7 @@ import type { Metadata } from "next"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "RopzMap - Creating a Roadmap made easy!",
+  title: "RoadMapper - Create Beautiful Roadmaps",
   description: "Create and manage beautiful roadmaps for your projects, career, and product development.",
     generator: 'v0.dev'
 }

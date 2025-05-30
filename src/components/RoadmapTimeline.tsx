@@ -303,51 +303,49 @@ const RoadmapTimeline: React.FC<RoadmapTimelineProps> = ({ roadmap }) => {
               ))}
             </div>
 
-            {/* Swimlanes by category - only show categories with items */}
+            {/* Swimlanes by category */}
             <div className="relative space-y-8">
-              {roadmap.categories
-                .filter((category) => roadmap.items.some((item) => item.category === category))
-                .map((category, categoryIndex) => (
-                  <div key={category} className="relative">
-                    <div className="flex items-center mb-2">
-                      <div className={`w-3 h-3 rounded-full mr-2 ${getCategoryColor(category, categoryIndex)}`} />
-                      <h3 className="text-sm font-medium text-slate-700 dark:text-slate-300">{category}</h3>
-                    </div>
-
-                    <div
-                      className={`relative bg-slate-50 dark:bg-slate-900 rounded-md overflow-hidden transition-all duration-200 ${
-                        dragOverCategory === category ? "bg-blue-100 dark:bg-blue-900 ring-2 ring-blue-400" : ""
-                      }`}
-                      style={{ height: `${Math.max(80, categoryHeights[category])}px` }}
-                      onDragOver={(e) => handleDragOver(e, category)}
-                      onDragLeave={handleDragLeave}
-                      onDrop={(e) => handleDrop(e, category)}
-                    >
-                      {itemsByCategory[category]?.map((item) => (
-                        <RoadmapItem
-                          key={item.id}
-                          item={item}
-                          style={calculateItemPosition(item, timelineStart, timelineDuration)}
-                          categoryColor={getCategoryColor(category, categoryIndex)}
-                          onEdit={handleEditItem}
-                          onDelete={handleDeleteItem}
-                          onDragUpdate={handleDragUpdate}
-                          timelineStart={timelineStart}
-                          timelineDuration={timelineDuration}
-                        />
-                      ))}
-
-                      {/* Drop zone indicator */}
-                      {dragOverCategory === category && (
-                        <div className="absolute inset-0 border-2 border-dashed border-blue-400 rounded-md pointer-events-none flex items-center justify-center">
-                          <span className="text-blue-600 dark:text-blue-400 text-sm font-medium bg-white dark:bg-slate-800 px-2 py-1 rounded">
-                            Drop here to move to {category}
-                          </span>
-                        </div>
-                      )}
-                    </div>
+              {roadmap.categories.map((category, categoryIndex) => (
+                <div key={category} className="relative">
+                  <div className="flex items-center mb-2">
+                    <div className={`w-3 h-3 rounded-full mr-2 ${getCategoryColor(category, categoryIndex)}`} />
+                    <h3 className="text-sm font-medium text-slate-700 dark:text-slate-300">{category}</h3>
                   </div>
-                ))}
+
+                  <div
+                    className={`relative bg-slate-50 dark:bg-slate-900 rounded-md overflow-hidden transition-all duration-200 ${
+                      dragOverCategory === category ? "bg-blue-100 dark:bg-blue-900 ring-2 ring-blue-400" : ""
+                    }`}
+                    style={{ height: `${categoryHeights[category]}px` }}
+                    onDragOver={(e) => handleDragOver(e, category)}
+                    onDragLeave={handleDragLeave}
+                    onDrop={(e) => handleDrop(e, category)}
+                  >
+                    {itemsByCategory[category]?.map((item) => (
+                      <RoadmapItem
+                        key={item.id}
+                        item={item}
+                        style={calculateItemPosition(item, timelineStart, timelineDuration)}
+                        categoryColor={getCategoryColor(category, categoryIndex)}
+                        onEdit={handleEditItem}
+                        onDelete={handleDeleteItem}
+                        onDragUpdate={handleDragUpdate}
+                        timelineStart={timelineStart}
+                        timelineDuration={timelineDuration}
+                      />
+                    ))}
+
+                    {/* Drop zone indicator */}
+                    {dragOverCategory === category && (
+                      <div className="absolute inset-0 border-2 border-dashed border-blue-400 rounded-md pointer-events-none flex items-center justify-center">
+                        <span className="text-blue-600 dark:text-blue-400 text-sm font-medium bg-white dark:bg-slate-800 px-2 py-1 rounded">
+                          Drop here to move to {category}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>

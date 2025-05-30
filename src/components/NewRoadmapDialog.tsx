@@ -55,6 +55,13 @@ const NewRoadmapDialog: React.FC<NewRoadmapDialogProps> = ({ isOpen, onClose }) 
     }
   }
 
+  const handleCategoryKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault() // Prevent form submission
+      handleAddCategory(e as any) // Call the existing add category logic
+    }
+  }
+
   const handleRemoveCategory = (category: string) => {
     setFormData((prev) => ({
       ...prev,
@@ -212,8 +219,9 @@ const NewRoadmapDialog: React.FC<NewRoadmapDialogProps> = ({ isOpen, onClose }) 
                     type="text"
                     value={newCategory}
                     onChange={(e) => setNewCategory(e.target.value)}
+                    onKeyDown={handleCategoryKeyDown}
                     placeholder="Add a category"
-                    className="flex-1 px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-slate-700 dark:text-white"
+                    className="flex-1 px-3 py-1.5 text-sm border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-slate-700 dark:text-white"
                   />
                   <button
                     type="button"
