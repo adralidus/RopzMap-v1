@@ -16,7 +16,7 @@ interface TooltipProps {
 export const Tooltip: React.FC<TooltipProps> = ({
   content,
   children,
-  delay = 500,
+  delay = 300,
   className,
   side = "top",
   align = "center",
@@ -42,54 +42,54 @@ export const Tooltip: React.FC<TooltipProps> = ({
     let left = 0
     let finalSide = side
 
-    // For roadmap items, prefer showing tooltip above to avoid going off-screen
-    const preferredSide = triggerRect.bottom > viewportHeight * 0.7 ? "top" : side
+    // More aggressive detection for bottom positioning
+    // If the trigger is in the bottom half of the viewport, prefer showing above
+    const spaceBelow = viewportHeight - triggerRect.bottom
+    const spaceAbove = triggerRect.top
+    const tooltipHeight = tooltipRect.height || 120 // Estimate if not measured yet
 
-    // Calculate position based on preferred side
-    switch (preferredSide) {
+    // Force tooltip above if there's not enough space below
+    if (spaceBelow < tooltipHeight + 20 || triggerRect.bottom > viewportHeight * 0.6) {
+      finalSide = "top"
+    } else if (spaceAbove < tooltipHeight + 20) {
+      finalSide = "bottom"
+    } else {
+      finalSide = side
+    }
+
+    // Calculate position based on determined side
+    switch (finalSide) {
       case "top":
-        top = triggerRect.top + scrollY - tooltipRect.height - 12
+        top = triggerRect.top + scrollY - tooltipHeight - 16
+        // Ensure it doesn't go above viewport
         if (top < scrollY + 10) {
-          // Not enough space above, show below
-          top = triggerRect.bottom + scrollY + 12
-          finalSide = "bottom"
-        } else {
-          finalSide = "top"
+          top = scrollY + 10
         }
         break
       case "bottom":
-        top = triggerRect.bottom + scrollY + 12
-        if (top + tooltipRect.height > viewportHeight + scrollY - 10) {
-          // Not enough space below, show above
-          top = triggerRect.top + scrollY - tooltipRect.height - 12
-          finalSide = "top"
-        } else {
-          finalSide = "bottom"
+        top = triggerRect.bottom + scrollY + 16
+        // Ensure it doesn't go below viewport
+        if (top + tooltipHeight > viewportHeight + scrollY - 10) {
+          top = viewportHeight + scrollY - tooltipHeight - 10
         }
         break
       case "left":
-        left = triggerRect.left + scrollX - tooltipRect.width - 12
+        left = triggerRect.left + scrollX - tooltipRect.width - 16
         if (left < scrollX + 10) {
-          // Not enough space left, show right
-          left = triggerRect.right + scrollX + 12
+          left = triggerRect.right + scrollX + 16
           finalSide = "right"
-        } else {
-          finalSide = "left"
         }
         break
       case "right":
-        left = triggerRect.right + scrollX + 12
+        left = triggerRect.right + scrollX + 16
         if (left + tooltipRect.width > viewportWidth + scrollX - 10) {
-          // Not enough space right, show left
-          left = triggerRect.left + scrollX - tooltipRect.width - 12
+          left = triggerRect.left + scrollX - tooltipRect.width - 16
           finalSide = "left"
-        } else {
-          finalSide = "right"
         }
         break
     }
 
-    // Calculate left/right position for top/bottom sides
+    // Calculate horizontal position for top/bottom tooltips
     if (finalSide === "top" || finalSide === "bottom") {
       switch (align) {
         case "start":
@@ -105,14 +105,15 @@ export const Tooltip: React.FC<TooltipProps> = ({
       }
 
       // Ensure tooltip doesn't go off screen horizontally
-      if (left < scrollX + 10) {
-        left = scrollX + 10
-      } else if (left + tooltipRect.width > viewportWidth + scrollX - 10) {
-        left = viewportWidth + scrollX - tooltipRect.width - 10
+      const padding = 16
+      if (left < scrollX + padding) {
+        left = scrollX + padding
+      } else if (left + tooltipRect.width > viewportWidth + scrollX - padding) {
+        left = viewportWidth + scrollX - tooltipRect.width - padding
       }
     }
 
-    // Calculate top/bottom position for left/right sides
+    // Calculate vertical position for left/right tooltips
     if (finalSide === "left" || finalSide === "right") {
       switch (align) {
         case "start":
@@ -128,10 +129,11 @@ export const Tooltip: React.FC<TooltipProps> = ({
       }
 
       // Ensure tooltip doesn't go off screen vertically
-      if (top < scrollY + 10) {
-        top = scrollY + 10
-      } else if (top + tooltipRect.height > viewportHeight + scrollY - 10) {
-        top = viewportHeight + scrollY - tooltipRect.height - 10
+      const padding = 16
+      if (top < scrollY + padding) {
+        top = scrollY + padding
+      } else if (top + tooltipRect.height > viewportHeight + scrollY - padding) {
+        top = viewportHeight + scrollY - tooltipRect.height - padding
       }
     }
 
@@ -157,7 +159,9 @@ export const Tooltip: React.FC<TooltipProps> = ({
 
   useEffect(() => {
     if (isVisible) {
-      calculatePosition()
+      // Small delay to ensure tooltip is rendered before calculating position
+      const timer = setTimeout(calculatePosition, 10)
+      return () => clearTimeout(timer)
     }
   }, [isVisible])
 
@@ -208,12 +212,16 @@ export const Tooltip: React.FC<TooltipProps> = ({
         <div
           ref={tooltipRef}
           className={cn(
-            "fixed z-50 px-3 py-2 text-sm text-white bg-slate-900 dark:bg-slate-700 rounded-md shadow-lg pointer-events-none transition-opacity duration-200",
-            "before:absolute before:w-2 before:h-2 before:bg-slate-900 dark:before:bg-slate-700 before:rotate-45",
-            actualSide === "top" && "before:bottom-[-4px] before:left-1/2 before:-translate-x-1/2",
-            actualSide === "bottom" && "before:top-[-4px] before:left-1/2 before:-translate-x-1/2",
-            actualSide === "left" && "before:right-[-4px] before:top-1/2 before:-translate-y-1/2",
-            actualSide === "right" && "before:left-[-4px] before:top-1/2 before:-translate-y-1/2",
+            "fixed z-[9999] px-4 py-3 text-sm text-white bg-slate-900 dark:bg-slate-800 rounded-lg shadow-xl border border-slate-700 pointer-events-none transition-opacity duration-200 max-w-sm",
+            "before:absolute before:w-3 before:h-3 before:bg-slate-900 dark:before:bg-slate-800 before:border-slate-700 before:rotate-45",
+            actualSide === "top" &&
+              "before:bottom-[-6px] before:left-1/2 before:-translate-x-1/2 before:border-r before:border-b",
+            actualSide === "bottom" &&
+              "before:top-[-6px] before:left-1/2 before:-translate-x-1/2 before:border-l before:border-t",
+            actualSide === "left" &&
+              "before:right-[-6px] before:top-1/2 before:-translate-y-1/2 before:border-t before:border-r",
+            actualSide === "right" &&
+              "before:left-[-6px] before:top-1/2 before:-translate-y-1/2 before:border-b before:border-l",
             className,
           )}
           style={{
