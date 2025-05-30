@@ -1,7 +1,7 @@
 # RopzMap
 Creating a roadmap made easy!
 
-Access it here: https://ropzmap.netlify.app/#
+Access it here: https://ropzmap.netlify.app/# (old) | https://v0-projectboltsb1f5pqvzod.vercel.app/ (new)
 
 Features:
 1. Create a Roadmap with ease
