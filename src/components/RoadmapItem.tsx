@@ -118,15 +118,15 @@ const RoadmapItem: React.FC<RoadmapItemProps> = ({
   return (
     <Tooltip content={tooltipContent} side="top" align="center" delay={300}>
       <div
-        className={`absolute ${categoryColor} rounded-md p-2 shadow-md transition-all duration-200 transform hover:scale-[1.02] hover:z-10 cursor-move overflow-hidden ${
+        className={`absolute ${categoryColor} rounded-md p-3 shadow-md transition-all duration-200 transform hover:scale-[1.02] hover:z-10 cursor-move overflow-hidden ${
           isDragging ? "opacity-50 scale-105 rotate-1 z-20" : ""
         }`}
         style={{
           left: style.left,
           width: style.width,
           top: style.top,
-          height: "32px",
-          minWidth: "120px",
+          height: "60px", // Increased from 32px to 60px
+          minWidth: "180px", // Increased from 120px to 180px
           maxWidth: "100%",
         }}
         draggable
@@ -137,10 +137,10 @@ const RoadmapItem: React.FC<RoadmapItemProps> = ({
       >
         <div className="flex items-center justify-between h-full text-white">
           <div className="flex items-center flex-1 min-w-0">
-            <GripVertical className="h-3 w-3 mr-1 opacity-60 flex-shrink-0" />
+            <GripVertical className="h-4 w-4 mr-2 opacity-60 flex-shrink-0" />
             <div className="flex-1 min-w-0">
-              <h3 className="font-medium text-xs truncate leading-tight">{item.title}</h3>
-              <div className="text-xs opacity-75 flex items-center leading-tight">
+              <h3 className="font-semibold text-sm truncate leading-tight mb-1">{item.title}</h3>
+              <div className="text-xs opacity-90 flex items-center leading-tight">
                 <span className="truncate">{formatDate(item.startDate)}</span>
                 <span className="mx-1">→</span>
                 <span className="truncate">{formatDate(item.endDate)}</span>
@@ -155,33 +155,33 @@ const RoadmapItem: React.FC<RoadmapItemProps> = ({
                   e.stopPropagation()
                   onEdit(item)
                 }}
-                className="p-1 rounded-full bg-white bg-opacity-20 hover:bg-opacity-30 transition-colors"
+                className="p-1.5 rounded-full bg-white bg-opacity-20 hover:bg-opacity-30 transition-colors"
                 title="Edit item"
               >
-                <Edit className="h-2.5 w-2.5" />
+                <Edit className="h-3 w-3" />
               </button>
               <button
                 onClick={(e) => {
                   e.stopPropagation()
                   onDelete(item.id)
                 }}
-                className="p-1 rounded-full bg-white bg-opacity-20 hover:bg-opacity-30 transition-colors"
+                className="p-1.5 rounded-full bg-white bg-opacity-20 hover:bg-opacity-30 transition-colors"
                 title="Delete item"
               >
-                <Trash className="h-2.5 w-2.5" />
+                <Trash className="h-3 w-3" />
               </button>
             </div>
           )}
 
           {/* Progress indicator */}
-          <div className="absolute bottom-0 left-0 right-0 h-1 bg-black bg-opacity-20">
+          <div className="absolute bottom-0 left-0 right-0 h-2 bg-black bg-opacity-20">
             <div
               className={`h-full ${progressColorClass} transition-all duration-300 ease-out`}
               style={{ width: `${item.progress}%` }}
             />
           </div>
 
-          {item.progress === 100 && <CheckCircle className="absolute top-0.5 right-0.5 h-3 w-3 text-white" />}
+          {item.progress === 100 && <CheckCircle className="absolute top-1 right-1 h-4 w-4 text-white" />}
         </div>
       </div>
     </Tooltip>
