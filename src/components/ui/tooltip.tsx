@@ -42,38 +42,49 @@ export const Tooltip: React.FC<TooltipProps> = ({
     let left = 0
     let finalSide = side
 
+    // For roadmap items, prefer showing tooltip above to avoid going off-screen
+    const preferredSide = triggerRect.bottom > viewportHeight * 0.7 ? "top" : side
+
     // Calculate position based on preferred side
-    switch (side) {
+    switch (preferredSide) {
       case "top":
-        top = triggerRect.top + scrollY - tooltipRect.height - 8
-        if (top < scrollY) {
+        top = triggerRect.top + scrollY - tooltipRect.height - 12
+        if (top < scrollY + 10) {
           // Not enough space above, show below
-          top = triggerRect.bottom + scrollY + 8
+          top = triggerRect.bottom + scrollY + 12
           finalSide = "bottom"
-        }
-        break
-      case "bottom":
-        top = triggerRect.bottom + scrollY + 8
-        if (top + tooltipRect.height > viewportHeight + scrollY) {
-          // Not enough space below, show above
-          top = triggerRect.top + scrollY - tooltipRect.height - 8
+        } else {
           finalSide = "top"
         }
         break
+      case "bottom":
+        top = triggerRect.bottom + scrollY + 12
+        if (top + tooltipRect.height > viewportHeight + scrollY - 10) {
+          // Not enough space below, show above
+          top = triggerRect.top + scrollY - tooltipRect.height - 12
+          finalSide = "top"
+        } else {
+          finalSide = "bottom"
+        }
+        break
       case "left":
-        left = triggerRect.left + scrollX - tooltipRect.width - 8
-        if (left < scrollX) {
+        left = triggerRect.left + scrollX - tooltipRect.width - 12
+        if (left < scrollX + 10) {
           // Not enough space left, show right
-          left = triggerRect.right + scrollX + 8
+          left = triggerRect.right + scrollX + 12
           finalSide = "right"
+        } else {
+          finalSide = "left"
         }
         break
       case "right":
-        left = triggerRect.right + scrollX + 8
-        if (left + tooltipRect.width > viewportWidth + scrollX) {
+        left = triggerRect.right + scrollX + 12
+        if (left + tooltipRect.width > viewportWidth + scrollX - 10) {
           // Not enough space right, show left
-          left = triggerRect.left + scrollX - tooltipRect.width - 8
+          left = triggerRect.left + scrollX - tooltipRect.width - 12
           finalSide = "left"
+        } else {
+          finalSide = "right"
         }
         break
     }
@@ -94,10 +105,10 @@ export const Tooltip: React.FC<TooltipProps> = ({
       }
 
       // Ensure tooltip doesn't go off screen horizontally
-      if (left < scrollX + 8) {
-        left = scrollX + 8
-      } else if (left + tooltipRect.width > viewportWidth + scrollX - 8) {
-        left = viewportWidth + scrollX - tooltipRect.width - 8
+      if (left < scrollX + 10) {
+        left = scrollX + 10
+      } else if (left + tooltipRect.width > viewportWidth + scrollX - 10) {
+        left = viewportWidth + scrollX - tooltipRect.width - 10
       }
     }
 
@@ -117,10 +128,10 @@ export const Tooltip: React.FC<TooltipProps> = ({
       }
 
       // Ensure tooltip doesn't go off screen vertically
-      if (top < scrollY + 8) {
-        top = scrollY + 8
-      } else if (top + tooltipRect.height > viewportHeight + scrollY - 8) {
-        top = viewportHeight + scrollY - tooltipRect.height - 8
+      if (top < scrollY + 10) {
+        top = scrollY + 10
+      } else if (top + tooltipRect.height > viewportHeight + scrollY - 10) {
+        top = viewportHeight + scrollY - tooltipRect.height - 10
       }
     }
 
