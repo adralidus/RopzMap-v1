@@ -1,30 +1,24 @@
-# projectboltsb1f5pqvzod
+# RopzMap
+Creating a roadmap made easy!
 
-*Automatically synced with your [v0.dev](https://v0.dev) deployments*
+Access it here: https://ropzmap.netlify.app/#
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/john-daniel-ropezs-projects/ropzmap)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.dev-black?style=for-the-badge)](https://v0.dev/chat/projects/zEPqSjbRYyi)
+Features:
+1. Create a Roadmap with ease
+2. Progress saved in your browser's cache (You'll never lose it!)
+3. Can be exported as .json
 
-## Overview
+## Friendly Interface
+<img width="1439" alt="image" src="https://github.com/user-attachments/assets/b40a8a70-8129-4ff2-8fdc-a1b3635d8457" />
 
-This repository will stay in sync with your deployed chats on [v0.dev](https://v0.dev).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.dev](https://v0.dev).
+## Dark and Light mode preferences
+<img width="1439" alt="image" src="https://github.com/user-attachments/assets/88b32ac1-4d04-4e7a-8f23-13da1d1bcf3f" />
 
-## Deployment
+## Roadmap Templates available
+<img width="1439" alt="image" src="https://github.com/user-attachments/assets/9e63e088-8701-412b-9b2e-7dc24e44bdf0" />
 
-Your project is live at:
+## Dynamic Categories
+<img width="1439" alt="image" src="https://github.com/user-attachments/assets/afb3b48b-04a0-4057-b5a8-8ee0901ad442" />
 
-**[https://vercel.com/john-daniel-ropezs-projects/ropzmap](https://vercel.com/john-daniel-ropezs-projects/ropzmap)**
-
-## Build your app
-
-Continue building your app on:
-
-**[https://v0.dev/chat/projects/zEPqSjbRYyi](https://v0.dev/chat/projects/zEPqSjbRYyi)**
-
-## How It Works
-
-1. Create and modify your project using [v0.dev](https://v0.dev)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+## The ROPZMAP!!!
+<img width="1439" alt="image" src="https://github.com/user-attachments/assets/f81c39ce-2539-4077-975f-95b1cd6b9c6b" />
