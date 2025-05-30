@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { Sun, Moon, Calendar, Coffee, Github } from "lucide-react"
+import { Sun, Moon, Coffee, Github } from "lucide-react"
 import { useTheme } from "../context/ThemeContext"
 import { useRoadmap } from "../context/RoadmapContext"
 
@@ -25,18 +25,9 @@ const Header: React.FC = () => {
                   onClick={handleLogoClick}
                   className="text-2xl font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors cursor-pointer"
                 >
-                  RopzMap
+                  RopzMap 🗺️
                 </a>
               </div>
-              <nav className="hidden md:ml-8 md:flex md:space-x-4">
-                <a
-                  href="#"
-                  className="px-3 py-2 rounded-md text-sm font-medium text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                >
-                  <Calendar className="inline-block w-4 h-4 mr-1" />
-                  Roadmaps
-                </a>
-              </nav>
             </div>
             <div className="flex items-center space-x-4">
               <button
