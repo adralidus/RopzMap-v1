@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useState, useMemo, useRef } from "react"
-import { Plus, X, FileImage } from "lucide-react"
+import { Plus, X, FileImage, Edit } from "lucide-react"
 import type { Roadmap, RoadmapItem as RoadmapItemType } from "../types"
 import RoadmapItem from "./RoadmapItem"
 import PrintableRoadmap from "./PrintableRoadmap"
@@ -26,6 +26,12 @@ const RoadmapTimeline: React.FC<RoadmapTimelineProps> = ({ roadmap }) => {
   const [dragOverCategory, setDragOverCategory] = useState<string | null>(null)
   const [showExportDialog, setShowExportDialog] = useState(false)
   const timelineRef = useRef<HTMLDivElement>(null)
+
+  const [isEditingRoadmap, setIsEditingRoadmap] = useState(false)
+  const [editFormData, setEditFormData] = useState({
+    title: roadmap.title,
+    description: roadmap.description,
+  })
 
   // Calculate date range for the timeline
   const { start: timelineStart, end: timelineEnd } = useMemo(() => getRoadmapDateRange(roadmap), [roadmap])
@@ -193,6 +199,45 @@ const RoadmapTimeline: React.FC<RoadmapTimelineProps> = ({ roadmap }) => {
     setSelectedCategory(category === selectedCategory ? null : category)
   }
 
+  const handleEditRoadmap = () => {
+    setEditFormData({
+      title: roadmap.title,
+      description: roadmap.description,
+    })
+    setIsEditingRoadmap(true)
+  }
+
+  const handleSaveRoadmapEdit = () => {
+    const updatedRoadmap = {
+      ...roadmap,
+      title: editFormData.title,
+      description: editFormData.description,
+    }
+    updateRoadmap(updatedRoadmap)
+    setIsEditingRoadmap(false)
+    toast({
+      title: "Roadmap Updated",
+      description: "Roadmap title and description have been updated successfully.",
+      className: "bg-green-50 dark:bg-green-900 border-green-200 dark:border-green-800",
+    })
+  }
+
+  const handleCancelRoadmapEdit = () => {
+    setIsEditingRoadmap(false)
+    setEditFormData({
+      title: roadmap.title,
+      description: roadmap.description,
+    })
+  }
+
+  const handleEditFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    setEditFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }))
+  }
+
   return (
     <>
       {/* Add data attribute for export targeting */}
@@ -202,8 +247,70 @@ const RoadmapTimeline: React.FC<RoadmapTimelineProps> = ({ roadmap }) => {
       >
         {/* Timeline header with month labels */}
         <div className="border-b border-slate-200 dark:border-slate-700 px-6 py-4">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold text-slate-900 dark:text-white">{roadmap.title}</h2>
+          <div className="flex justify-between items-start mb-4">
+            {isEditingRoadmap ? (
+              <div className="flex-1 mr-4 space-y-3">
+                <div>
+                  <input
+                    type="text"
+                    name="title"
+                    value={editFormData.title}
+                    onChange={handleEditFormChange}
+                    className="text-xl font-semibold bg-transparent border-b-2 border-blue-500 focus:outline-none focus:border-blue-600 text-slate-900 dark:text-white w-full"
+                    placeholder="Roadmap title"
+                    autoFocus
+                  />
+                </div>
+                <div>
+                  <textarea
+                    name="description"
+                    value={editFormData.description}
+                    onChange={handleEditFormChange}
+                    rows={2}
+                    className="text-sm bg-transparent border border-slate-300 dark:border-slate-600 rounded-md px-2 py-1 focus:outline-none focus:border-blue-500 text-slate-600 dark:text-slate-400 w-full resize-none"
+                    placeholder="Add a description for your roadmap..."
+                  />
+                </div>
+                <div className="flex items-center space-x-2">
+                  <button
+                    onClick={handleSaveRoadmapEdit}
+                    className="inline-flex items-center px-3 py-1 text-xs font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors"
+                  >
+                    Save
+                  </button>
+                  <button
+                    onClick={handleCancelRoadmapEdit}
+                    className="inline-flex items-center px-3 py-1 text-xs font-medium rounded-md text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="flex-1 mr-4">
+                <div className="flex items-center group">
+                  <h2 className="text-xl font-semibold text-slate-900 dark:text-white">{roadmap.title}</h2>
+                  <button
+                    onClick={handleEditRoadmap}
+                    className="ml-2 p-1 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 opacity-0 group-hover:opacity-100 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    title="Edit roadmap details"
+                  >
+                    <Edit className="h-4 w-4" />
+                  </button>
+                </div>
+                {roadmap.description && (
+                  <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">{roadmap.description}</p>
+                )}
+                {!roadmap.description && !isEditingRoadmap && (
+                  <button
+                    onClick={handleEditRoadmap}
+                    className="text-sm text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 mt-1 italic"
+                  >
+                    Add description...
+                  </button>
+                )}
+              </div>
+            )}
             <div className="flex items-center space-x-2">
               <button
                 onClick={() => setShowExportDialog(true)}
