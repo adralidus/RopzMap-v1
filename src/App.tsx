@@ -3,12 +3,9 @@
 import type React from "react"
 import dynamic from "next/dynamic"
 import { Toaster } from "@/components/ui/toaster"
+import { ThemeProvider } from "@/components/theme-provider"
 
 // Dynamically import providers to avoid hydration mismatch
-const ThemeProvider = dynamic(() => import("./context/ThemeContext").then(mod => ({ default: mod.ThemeProvider })), {
-  ssr: false
-})
-
 const RoadmapProvider = dynamic(() => import("./context/RoadmapContext").then(mod => ({ default: mod.RoadmapProvider })), {
   ssr: false
 })
@@ -68,7 +65,7 @@ const RoadmapApp: React.FC = dynamic(() =>
 
 function App() {
   return (
-    <ThemeProvider>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <RoadmapProvider>
         <RoadmapApp />
       </RoadmapProvider>
