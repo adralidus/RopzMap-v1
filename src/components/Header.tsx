@@ -2,15 +2,19 @@
 
 import type React from "react"
 import { Sun, Moon, Coffee, Github } from "lucide-react"
-import { useTheme } from "../context/ThemeContext"
+import { useTheme } from "next-themes"
 import { useRoadmap } from "../context/RoadmapContext"
 
 const Header: React.FC = () => {
-  const { theme, toggleTheme } = useTheme()
+  const { theme, setTheme } = useTheme()
   const { setCurrentRoadmap } = useRoadmap()
 
   const handleLogoClick = () => {
     setCurrentRoadmap(null)
+  }
+
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark")
   }
 
   return (
@@ -63,6 +67,26 @@ const Header: React.FC = () => {
           </div>
         </div>
       </header>
+
+      {/* Footer with Bolt.new badge */}
+      <footer className="fixed bottom-4 right-4 z-10">
+        <a
+          href="https://bolt.new"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium text-slate-600 dark:text-slate-400 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-all duration-200 opacity-40 hover:opacity-80"
+          title="Built with Bolt.new"
+        >
+          <svg
+            className="h-3 w-3 mr-1.5"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
+            <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+          Built with Bolt.new
+        </a>
+      </footer>
     </>
   )
 }
