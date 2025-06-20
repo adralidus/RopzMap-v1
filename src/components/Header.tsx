@@ -6,7 +6,7 @@ import { useTheme } from "../context/ThemeContext"
 import { useRoadmap } from "../context/RoadmapContext"
 
 const Header: React.FC = () => {
-  const { theme, toggleTheme } = useTheme()
+  const { theme, toggleTheme, mounted } = useTheme()
   const { setCurrentRoadmap } = useRoadmap()
 
   const handleLogoClick = () => {
@@ -35,7 +35,11 @@ const Header: React.FC = () => {
                 className="p-2 rounded-full text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
                 aria-label="Toggle dark mode"
               >
-                {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+                {mounted ? (
+                  theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />
+                ) : (
+                  <Moon className="h-5 w-5" />
+                )}
               </button>
               <a
                 href="https://github.com/adralidus"
